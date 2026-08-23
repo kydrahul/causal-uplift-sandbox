@@ -1,5 +1,7 @@
 # Causal Inference Sandbox: Uplift Modeling for User Retention
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-causal--uplift--sandbox.onrender.com-success?style=for-the-badge)](https://causal-uplift-sandbox.onrender.com)
+*(Note: Hosted on a free Render tier. It may take ~50 seconds to wake up if inactive.)*
 An end-to-end Machine Learning pipeline and full-stack web application designed to demonstrate the power of **Causal Inference** and **Uplift Modeling**. 
 
 While traditional predictive ML answers "Will this user churn?", Uplift Modeling answers a far more valuable business question: **"Will intervening (e.g., sending a promo code) *prevent* this user from churning?"**
