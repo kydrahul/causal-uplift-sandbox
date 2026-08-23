@@ -4,34 +4,17 @@ numpy<2.5
 scikit-learn>=1.3
 scipy>=1.11
 
-# Causal ML
-causalml>=0.15.0
-econml>=0.15.0
-dowhy>=0.11
+# Causal ML (Used by joblib models)
 doubleml>=0.7
-
-# Gradient boosting backends
 lightgbm>=4.0
 
-# Explainability & Serialization
-shap>=0.43
+# Serialization
 joblib>=1.3
 
-# Visualization
+# Visualization (for run_pipeline)
 matplotlib>=3.7
 seaborn>=0.13
-
-# Notebooks & Environment
-jupyter>=1.0
-ipykernel
-
-# Testing
-pytest>=7.0
 
 # Backend Web Server
 fastapi>=0.100
 uvicorn>=0.23
-
-# Utilities
-tqdm>=4.65
-requests>=2.31
