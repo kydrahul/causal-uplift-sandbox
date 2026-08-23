@@ -18,8 +18,10 @@ models/*.pkl
 models/*.joblib
 data/*.csv
 !data/.gitkeep
-results/
-!results/.gitkeep
+# Ignore results but keep the figures needed for the frontend
+results/*
+!results/figures/
+!results/figures/*.png
 
 # IDEs and OS
 .vscode/
