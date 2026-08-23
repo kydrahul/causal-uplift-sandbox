@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.env/
+env/
+
+# Node / JS
+frontend/node_modules/
+# Keep frontend/dist for easy deployment, or remove if you want users to build
+# frontend/dist/ 
+
+# Models and Generated Data
+models/*.pkl
+models/*.joblib
+data/*.csv
+!data/.gitkeep
+results/
+!results/.gitkeep
+
+# IDEs and OS
+.vscode/
+.idea/
+.DS_Store
+.gemini/
+
+# Scratch Scripts
+fix_nb04.py
+fix_unicode.py
+check_deps.py
+test_imports.py
+generate_notebooks.py
+save_models.py
+
+# Old Static (Replaced by React)
+static/
