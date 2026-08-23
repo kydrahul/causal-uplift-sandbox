@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Activity, Clock, Star, Tags, Dices, Terminal, BarChart2, CheckCircle2, FlaskConical, Target, X, Plus } from "lucide-react";
+import { Activity, Clock, Star, Tags, Dices, Terminal, BarChart2, CheckCircle2, FlaskConical, Target, X, Plus, Github } from "lucide-react";
 
 function App() {
   const [features, setFeatures] = useState({
@@ -127,11 +127,22 @@ function App() {
       <div className="max-w-[1400px] mx-auto space-y-6">
         
         {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">Causal Inference Sandbox</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Uplift Modeling / Double Machine Learning
-          </p>
+        <header className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">Causal Inference Sandbox</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Uplift Modeling / Double Machine Learning
+            </p>
+          </div>
+          <a 
+            href="https://github.com/kydrahul/causal-uplift-sandbox" 
+            target="_blank" 
+            rel="noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#18181b] hover:bg-zinc-800 border border-border/40 rounded-md text-sm font-medium transition-colors text-zinc-300 hover:text-white shadow-sm"
+          >
+            <Github className="w-4 h-4" />
+            <span>View on GitHub</span>
+          </a>
         </header>
 
         {/* Top Grid mimicking the reference image */}
