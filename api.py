@@ -41,6 +41,10 @@ def load_assets():
     except Exception as e:
         print(f"Failed to load models: {e}")
 
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "message": "Server is awake"}
+
 @app.get("/api/random_user")
 def get_random_user():
     # Pick a random user from the dataset
