@@ -166,7 +166,9 @@ def calibration_by_decile(
             "n_control": len(control),
         })
 
-    return pd.DataFrame(rows).sort_values("decile")
+    return pd.DataFrame(rows, columns=[
+        "decile", "mean_tau_hat", "empirical_lift", "n_treated", "n_control"
+    ]).sort_values("decile")
 
 
 # ---------------------------------------------------------------------------
