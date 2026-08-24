@@ -86,19 +86,24 @@ function App() {
         body: JSON.stringify({ features: payload })
       });
       const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.detail || `Server returned ${res.status}`);
+      }
+      
       const latency = (performance.now() - t0).toFixed(0);
       
       setPredictions({
-        dml: data.doubleml_uplift,
-        s: data.s_learner_uplift,
-        value: data.predicted_value,
-        segment: data.segment,
-        is_mismatch: data.is_mismatch
+        dml: data.doubleml_uplift ?? null,
+        s: data.s_learner_uplift ?? null,
+        value: data.predicted_value ?? null,
+        segment: data.segment ?? null,
+        is_mismatch: data.is_mismatch ?? false
       });
       
       addLog(`200 OK (${latency}ms) -> DML: ${(data.doubleml_uplift*100).toFixed(2)}%, S: ${(data.s_learner_uplift*100).toFixed(2)}%`, "response");
     } catch (e) {
-      addLog(`Prediction failed: ${e.message}`, "error");
+      addLog(`Error predicting: ${e.message}`, "error");
     } finally {
       setLoading(false);
     }

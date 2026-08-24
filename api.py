@@ -61,6 +61,7 @@ def load_assets():
 def health_check():
     return {"status": "ok", "message": "Server is awake"}
 
+
 @app.get("/api/random_user")
 def get_random_user():
     # Pick a random user from the dataset
