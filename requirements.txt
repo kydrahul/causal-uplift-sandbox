@@ -8,6 +8,7 @@ scipy>=1.11
 # Causal ML (Used by joblib models)
 doubleml==0.7.1
 lightgbm==4.6.0
+econml>=0.15.0
 
 # Serialization
 joblib>=1.3
