@@ -361,3 +361,48 @@ def plot_metrics_bar(
     if save:
         _save(fig, f"metrics_bar_{metric.lower()}.png")
     return fig
+
+# ---------------------------------------------------------------------------
+# Value vs Uplift Scatter Plot
+# ---------------------------------------------------------------------------
+
+def plot_value_uplift_quadrant(df_segments: pd.DataFrame, uplift_threshold: float, value_threshold: float, save: bool = True):
+    """
+    Plots a 2x2 scatter grid of CATE (Uplift) vs Predicted Value.
+    Highlights the "Mismatch" quadrant.
+    """
+    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    # Define colors for segments
+    color_map = {
+        "Star Users (High Uplift, High Value)": "#2ecc71",      # Green
+        "Mismatch (High Uplift, Low Value)": "#e74c3c",         # Red
+        "Sure Things (Low Uplift, High Value)": "#3498db",      # Blue
+        "Lost Causes (Low Uplift, Low Value)": "#95a5a6"        # Gray
+    }
+    
+    for segment, color in color_map.items():
+        subset = df_segments[df_segments["segment"] == segment]
+        ax.scatter(subset["uplift"], subset["predicted_value"], c=color, label=segment, alpha=0.6, edgecolors='none')
+
+    # Draw quadrant lines
+    ax.axvline(x=uplift_threshold, color='white', linestyle='--', alpha=0.5)
+    ax.axhline(y=value_threshold, color='white', linestyle='--', alpha=0.5)
+    
+    # Annotate Mismatch Quadrant
+    ax.text(
+        df_segments["uplift"].max(), 
+        value_threshold / 2, 
+        "⚠️ High Uplift, Low Value\n(Don't Treat)", 
+        color="#e74c3c", fontsize=12, fontweight='bold', ha='right', va='center'
+    )
+    
+    ax.set_title("Value-Aware Uplift Analysis", fontsize=16, fontweight='bold', color='white')
+    ax.set_xlabel("Predicted Causal Uplift (CATE)", fontsize=12, color='white')
+    ax.set_ylabel("Predicted Potential Lifetime Value", fontsize=12, color='white')
+    ax.legend(loc='upper left', frameon=False, labelcolor='white')
+    
+    plt.tight_layout()
+    if save:
+        _save(fig, "value_quadrant.png")
+    return fig

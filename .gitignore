@@ -15,7 +15,7 @@ frontend/node_modules/
 
 # Models and Generated Data
 models/*.pkl
-models/*.joblib
+# models/*.joblib # (Commented out because Render needs the models)
 data/*.csv
 !data/.gitkeep
 # Ignore results but keep the figures needed for the frontend

@@ -186,10 +186,41 @@ def simulate_treatment_outcome(
     p_y = np.where(T == 1, mu1, mu0)
     Y = rng.binomial(1, p_y)
 
+    # ---- Value Score (Lifetime Value Proxy) ----
+    # Value is only meaningful if the user returns (Y=1)
+    # Built from 3 components: 
+    # 1. Frequency (activity_level provides a strong baseline)
+    # 2. Diversity (genre_entropy adds to the ceiling of engagement)
+    # 3. Decay (recent activity implies sustained engagement, high recency implies quick decay)
+    
+    col_idx = {c: i for i, c in enumerate(col_names)}
+    activity = X_np[:, col_idx["activity_level"]]
+    entropy = X_np[:, col_idx["genre_entropy"]] if "genre_entropy" in col_idx else np.ones(len(X))
+    recency = X_np[:, col_idx["recency"]]
+    
+    # Scale to typical ranges
+    freq_component = np.log1p(activity) * 20
+    diversity_component = entropy * 15
+    decay_penalty = np.sqrt(recency) * 5
+    
+    # Non-linear interaction: highly active users who are diverse get a multiplier
+    interaction = (activity > np.median(activity)) * (entropy > np.median(entropy)) * 25
+    
+    # Base value score
+    raw_value = freq_component + diversity_component - decay_penalty + interaction
+    
+    # Add noise to simulate real-world variance (unexplained factors)
+    value_noise = rng.normal(0, 10, size=len(X))
+    final_value = np.clip(raw_value + value_noise, 0, 200)
+    
+    # Value is zero if they churned (did not return)
+    value_score = final_value * Y
+
     # ---- Package results ----
     df = X.copy()
     df["treatment"] = T.astype(int)
     df["outcome"] = Y.astype(int)
+    df["value_score"] = value_score
     df["tau_true"] = tau
     df["propensity"] = prop
 
@@ -197,6 +228,6 @@ def simulate_treatment_outcome(
     print(
         f"[simulate_rct] mode={mode} | n={len(df):,} | "
         f"P(T=1)={T.mean():.3f} | P(Y=1)={Y.mean():.3f} | "
-        f"True ATE={ate_true:.4f}"
+        f"True ATE={ate_true:.4f} | Mean Value (Retained)={value_score[Y==1].mean():.1f}"
     )
     return df

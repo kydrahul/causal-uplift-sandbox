@@ -18,7 +18,7 @@ function App() {
     is_female: 0
   });
 
-  const [predictions, setPredictions] = useState({ dml: null, s: null });
+  const [predictions, setPredictions] = useState({ dml: null, s: null, value: null, segment: null, is_mismatch: false });
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState([{ msg: "System initialized. Waiting for input...", type: "system", time: new Date() }]);
   const logContainerRef = useRef(null);
@@ -90,7 +90,10 @@ function App() {
       
       setPredictions({
         dml: data.doubleml_uplift,
-        s: data.s_learner_uplift
+        s: data.s_learner_uplift,
+        value: data.predicted_value,
+        segment: data.segment,
+        is_mismatch: data.is_mismatch
       });
       
       addLog(`200 OK (${latency}ms) -> DML: ${(data.doubleml_uplift*100).toFixed(2)}%, S: ${(data.s_learner_uplift*100).toFixed(2)}%`, "response");
@@ -144,6 +147,25 @@ function App() {
             <span>View on GitHub</span>
           </a>
         </header>
+
+        {predictions.is_mismatch && (
+          <div className="mb-6 bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-center justify-between shadow-lg backdrop-blur-md">
+            <div className="flex items-center gap-4">
+              <div className="bg-red-500/20 p-2 rounded-full">
+                <Target className="w-5 h-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="text-red-400 font-semibold text-sm">Value Mismatch Warning</h3>
+                <p className="text-red-400/80 text-xs mt-0.5">
+                  High Causal Uplift, but Low Predicted Lifetime Value. Do not treat.
+                </p>
+              </div>
+            </div>
+            <Badge variant="outline" className="bg-red-500/10 text-red-400 border-red-500/20">
+              Phantom Value
+            </Badge>
+          </div>
+        )}
 
         {/* Top Grid mimicking the reference image */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -312,48 +334,93 @@ function App() {
               {/* Subtle background accent */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-all group-hover:bg-blue-500/10"></div>
             </Card>
-
-            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-center relative overflow-hidden">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <div className="space-y-1">
-                    <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">S-Learner Baseline</CardTitle>
-                    <p className="text-[13px] text-zinc-300">Standard Naive ML</p>
-                  </div>
-                  <Badge variant="outline" className="text-zinc-400 border-zinc-700 text-[10px] rounded-sm">Baseline</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pb-4 flex flex-col gap-4">
-                <div key={predictions.s} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
-                  <h2 className={`text-4xl font-semibold tracking-tight ${loading ? 'opacity-50 text-zinc-500' : 'text-zinc-300'} transition-opacity`}>
-                    {formatPct(predictions.s)}
-                  </h2>
-                </div>
-                
-                {/* Visual indicator of bias gap */}
-                <div className="space-y-1.5 mt-2">
-                  <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
-                    <span>Bias Estimation</span>
-                    <span className="text-amber-500/80">Overestimated</span>
-                  </div>
-                  <div className="h-2 w-full bg-zinc-800/50 rounded-full overflow-hidden border border-zinc-800">
-                    <div 
-                      className="h-full bg-zinc-500 transition-all duration-700 ease-out" 
-                      style={{ width: predictions.s ? `${Math.min(100, Math.abs(predictions.s) * 300)}%` : '0%' }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="mt-2 pt-4 border-t border-border/20 flex justify-between items-center text-[12px] text-muted-foreground">
-                  <span className="flex items-center gap-1.5"><X className="w-3.5 h-3.5 text-amber-500/80"/> Uncontrolled</span>
-                  <span className="text-zinc-500">Naive Estimate</span>
-                </div>
-              </CardContent>
-            </Card>
-
           </div>
 
-        </div>
+            {/* Second Grid Column: S-Learner and Value Model */}
+            <div className="flex flex-col gap-6">
+              <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
+                      S-LEARNER BASELINE
+                    </h3>
+                    <p className="text-zinc-500 text-xs">Standard Naive ML</p>
+                  </div>
+                  <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
+                    Baseline
+                  </Badge>
+                </div>
+                
+                <div className="mt-6 mb-6">
+                  <span className="text-4xl font-bold text-zinc-100 tracking-tight">
+                    {predictions.s !== null ? `+${(predictions.s * 100).toFixed(2)}%` : '--'}
+                  </span>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-xs font-medium mb-2">
+                    <span className="text-zinc-500 uppercase tracking-wider">Bias Estimation</span>
+                    <span className="text-amber-500 font-semibold tracking-wider">OVERESTIMATED</span>
+                  </div>
+                  <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
+                    <div className="bg-amber-500/20 w-full h-full relative">
+                      <div className="absolute top-0 left-0 h-full bg-amber-500 w-[15%]"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 pt-5 border-t border-border/30 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 text-amber-500">
+                    <X className="w-3.5 h-3.5" />
+                    <span>Uncontrolled</span>
+                  </div>
+                  <span className="text-zinc-600">Naive Estimate</span>
+                </div>
+              </div>
+
+              {/* Value Prediction Card */}
+              <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
+                      LIFETIME VALUE MODEL
+                    </h3>
+                    <p className="text-zinc-500 text-xs">E[Value | Retained]</p>
+                  </div>
+                  <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
+                    LGBM
+                  </Badge>
+                </div>
+                
+                <div className="mt-6 mb-6">
+                  <span className="text-4xl font-bold text-zinc-100 tracking-tight">
+                    {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
+                  </span>
+                  <span className="text-zinc-500 text-sm ml-2">pts</span>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-xs font-medium mb-2">
+                    <span className="text-zinc-500 uppercase tracking-wider">Segment</span>
+                    <span className={`font-semibold tracking-wider ${predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}`}>
+                      {predictions.segment ? predictions.segment.toUpperCase() : '--'}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
+                    <div className={`h-full ${predictions.is_mismatch ? 'bg-red-500 w-1/2' : 'bg-blue-500 w-full'}`}></div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 pt-5 border-t border-border/30 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 text-emerald-400">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Value-Aware</span>
+                  </div>
+                  <span className="text-zinc-600">Post-Treatment Proxy</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
         {/* Bottom Section: Project Details Tabs (Like "Recent Transactions") */}
         <Card className="bg-[#18181b] border-border/40 shadow-none mt-6">
@@ -426,6 +493,20 @@ function App() {
 
             </Tabs>
           </CardContent>
+          {/* Quadrant Explainer Image */}
+          <div className="mt-8 bg-[#111113] border border-border/40 rounded-xl shadow-xl overflow-hidden">
+            <div className="p-4 border-b border-border/30 bg-[#18181b] flex items-center justify-between">
+              <h3 className="font-semibold text-sm tracking-wide text-zinc-300">Methodology: Value-Aware Segmentation</h3>
+            </div>
+            <div className="p-6">
+              <p className="text-sm text-zinc-400 mb-6 max-w-3xl leading-relaxed">
+                Our model doesn't just predict whether we can save a user (Uplift); it predicts if that user is actually worth saving (Lifetime Value). We cross-reference these two models to identify four key segments. The most critical is the <span className="text-red-400 font-semibold">Mismatch</span> quadrant: users who are highly receptive to treatment, but will churn shortly after anyway, offering purely "phantom value". 
+              </p>
+              <div className="bg-[#18181b] rounded-lg border border-border/30 p-2 flex justify-center">
+                <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[500px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+              </div>
+            </div>
+          </div>
         </Card>
 
       </div>

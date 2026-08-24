@@ -22,24 +22,39 @@ app.add_middleware(
 DATA_PATH = Path("data/simulation_observational.parquet")
 MODELS_DIR = Path("models")
 
-df = None
-feature_cols = []
 s_learner = None
 dml_model = None
+value_model = None
+df = None
+feature_cols = []
+model_load_error = None
+
+# We can dynamically calculate thresholds from the original dataset for the 2x2 grid
+uplift_threshold = 0.0
+value_threshold = 0.0
 
 @app.on_event("startup")
 def load_assets():
-    global df, feature_cols, s_learner, dml_model
-    print("Loading dataset...")
-    df = pd.read_parquet(DATA_PATH)
-    feature_cols = [c for c in df.columns if c not in ["treatment", "outcome", "tau_true", "propensity"]]
-    
-    print("Loading models...")
+    global df, feature_cols, s_learner, dml_model, value_model, model_load_error, uplift_threshold, value_threshold
     try:
+        df = pd.read_parquet(DATA_PATH)
+        feature_cols = [c for c in df.columns if c not in ["treatment", "outcome", "tau_true", "propensity", "value_score"]]
+        
         s_learner = joblib.load(MODELS_DIR / "s_learner.joblib")
         dml_model = joblib.load(MODELS_DIR / "doubleml_model.joblib")
-        print("Models loaded successfully.")
+        
+        # Load new Value Model
+        value_model = joblib.load(MODELS_DIR / "value_model.joblib")
+        
+        # Compute thresholds from historical dataset to align with Quadrant definitions
+        X_hist = df[feature_cols].values
+        historical_uplift = dml_model.effect(X_hist)
+        historical_value = value_model.predict(X_hist)
+        uplift_threshold = np.median(historical_uplift)
+        value_threshold = np.median(historical_value)
+        
     except Exception as e:
+        model_load_error = str(e)
         print(f"Failed to load models: {e}")
 
 @app.get("/api/health")
@@ -49,18 +64,26 @@ def health_check():
 @app.get("/api/random_user")
 def get_random_user():
     # Pick a random user from the dataset
+    if df is None:
+        return {"error": "Data not loaded"}
+    
     idx = random.randint(0, len(df) - 1)
     user_data = df.iloc[idx].to_dict()
-    # Remove hidden/true causal data from the payload so we don't cheat
-    for col in ["tau_true", "propensity", "outcome", "treatment"]:
-        user_data.pop(col, None)
-    return {"index": idx, "features": user_data}
+    
+    return {
+        "index": idx,
+        "features": user_data,
+        "true_uplift": user_data.get("tau_true")
+    }
 
 class PredictRequest(BaseModel):
     features: dict
 
 @app.post("/api/predict")
 def predict_uplift(request: PredictRequest):
+    if model_load_error:
+        return {"error": model_load_error}
+        
     # Construct X array in exact order of feature_cols
     x_dict = request.features
     x_array = np.array([[x_dict.get(c, 0.0) for c in feature_cols]])
@@ -73,6 +96,27 @@ def predict_uplift(request: PredictRequest):
     if dml_model is not None:
         tau_dml = float(dml_model.effect(x_array)[0])
         res["doubleml_uplift"] = tau_dml
+        
+    if value_model is not None:
+        pred_val = float(value_model.predict(x_array)[0])
+        res["predicted_value"] = pred_val
+        
+        # Quadrant segmentation
+        if tau_dml >= uplift_threshold and pred_val >= value_threshold:
+            segment = "Star Users"
+            is_mismatch = False
+        elif tau_dml >= uplift_threshold and pred_val < value_threshold:
+            segment = "Mismatch"
+            is_mismatch = True
+        elif tau_dml < uplift_threshold and pred_val >= value_threshold:
+            segment = "Sure Things"
+            is_mismatch = False
+        else:
+            segment = "Lost Causes"
+            is_mismatch = False
+            
+        res["segment"] = segment
+        res["is_mismatch"] = is_mismatch
         
     return res
 

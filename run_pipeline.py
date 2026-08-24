@@ -221,6 +221,61 @@ def phase4_doubleml(df, args):
 
 
 # ============================================================================
+# Phase 4b -- Value Modeling & Segment Mismatch Analysis
+# ============================================================================
+
+def phase4b_value_model(df, tau_dml, args):
+    print("\n" + "="*60)
+    print("PHASE 4b -- Value Modeling & Mismatch Analysis")
+    print("="*60)
+    t0 = time.time()
+    
+    from src.value_model import train_value_model
+    from src.segment_analysis import run_segment_analysis
+    from src.viz import plot_value_uplift_quadrant
+    import matplotlib.pyplot as plt
+    import joblib
+
+    feature_cols = [c for c in df.columns
+                    if c not in ["treatment", "outcome", "tau_true", "propensity", "value_score"]]
+
+    value_model, refutation_results = train_value_model(df, feature_cols, seed=42)
+    
+    # Save the model
+    MODELS_DIR = Path(__file__).resolve().parent / "models"
+    MODELS_DIR.mkdir(exist_ok=True)
+    joblib.dump(value_model, MODELS_DIR / "value_model.joblib")
+    
+    # Run Segment Analysis
+    if tau_dml is not None:
+        seg_results = run_segment_analysis(df, feature_cols, tau_dml, value_model)
+        
+        # Plot
+        df_segments = pd.DataFrame({
+            "uplift": tau_dml,
+            "predicted_value": seg_results["predicted_value"],
+            "segment": seg_results["segments"]
+        })
+        fig = plot_value_uplift_quadrant(
+            df_segments, 
+            uplift_threshold=seg_results["uplift_threshold"], 
+            value_threshold=seg_results["value_threshold"],
+            save=False
+        )
+        fig.savefig(FIGURES / "value_quadrant.png", bbox_inches="tight")
+        
+        # Also save to frontend public dir for the dashboard
+        FRONTEND_PUBLIC = Path(__file__).resolve().parent / "frontend" / "public"
+        FRONTEND_PUBLIC.mkdir(exist_ok=True)
+        fig.savefig(FRONTEND_PUBLIC / "value_quadrant.png", bbox_inches="tight", transparent=True)
+        
+        plt.close(fig)
+    
+    print(f"  Elapsed: {time.time()-t0:.1f}s")
+    return value_model
+
+
+# ============================================================================
 # Phase 5 -- Full evaluation & visualization
 # ============================================================================
 
@@ -324,6 +379,9 @@ if __name__ == "__main__":
     tau_dml = None
     if not args.skip_dml:
         tau_dml, refutation_results = phase4_doubleml(df, args)
+        
+    # Phase 4b: Value Modeling
+    value_model = phase4b_value_model(df, tau_dml, args)
 
     final_metrics = phase5_eval_viz(df, meta_results, tau_dml, meta_uplift_dfs, args)
 
