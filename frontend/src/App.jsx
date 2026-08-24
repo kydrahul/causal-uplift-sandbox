@@ -135,22 +135,38 @@ function App() {
       <div className="max-w-[1400px] mx-auto space-y-6">
         
         {/* Header */}
-        <header className="mb-8 flex justify-between items-start">
+        <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight">Causal Inference Sandbox</h1>
             <p className="text-sm text-muted-foreground mt-1">
               Uplift Modeling / Double Machine Learning
             </p>
           </div>
-          <a 
-            href="https://github.com/kydrahul/causal-uplift-sandbox" 
-            target="_blank" 
-            rel="noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-[#18181b] hover:bg-zinc-800 border border-border/40 rounded-md text-sm font-medium transition-colors text-zinc-300 hover:text-white shadow-sm"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-            <span>View on GitHub</span>
-          </a>
+          
+          <div className="flex items-center gap-4">
+            {/* Shifted Latency and Status to Top */}
+            <div className="flex items-center gap-4 bg-[#111113] border border-border/40 px-4 py-2 rounded-md shadow-sm h-10">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Online</span>
+              </div>
+              <div className="w-px h-4 bg-border/40"></div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">~15ms</span>
+              </div>
+            </div>
+
+            <a 
+              href="https://github.com/kydrahul/causal-uplift-sandbox" 
+              target="_blank" 
+              rel="noreferrer"
+              className="flex items-center gap-2 px-4 py-2 h-10 bg-[#18181b] hover:bg-zinc-800 border border-border/40 rounded-md text-sm font-medium transition-colors text-zinc-300 hover:text-white shadow-sm"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+              <span>View on GitHub</span>
+            </a>
+          </div>
         </header>
 
         {predictions.is_mismatch && (
@@ -172,48 +188,10 @@ function App() {
           </div>
         )}
 
-        {/* Top Grid mimicking the reference image */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 3-Column Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Column 1: API Log (Like "Contribution History") */}
-          <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-[550px] overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
-              <div className="space-y-1">
-                <CardTitle className="text-base font-semibold">Live Server Log</CardTitle>
-                <p className="text-[13px] text-muted-foreground">Real-time API requests</p>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col min-h-0 pb-6">
-              {/* Terminal Window */}
-              <div ref={logContainerRef} className="flex-1 min-h-0 bg-black/40 rounded-lg p-3 font-mono text-[11px] overflow-y-auto custom-scrollbar border border-border/30 mb-4">
-                {logs.map((l, i) => (
-                  <div key={i} className={`mb-1.5 leading-relaxed
-                    ${l.type === 'system' ? 'text-gray-500' : ''}
-                    ${l.type === 'request' ? 'text-zinc-300' : ''}
-                    ${l.type === 'response' ? 'text-emerald-400' : ''}
-                    ${l.type === 'error' ? 'text-red-400' : ''}
-                  `}>
-                    <span className="opacity-50 select-none mr-2">[{l.time.toISOString().split('T')[1].slice(0,8)}]</span>
-                    {l.msg}
-                  </div>
-                ))}
-              </div>
-
-              {/* Status block mimicking the small bottom cards */}
-              <div className="grid grid-cols-2 gap-3 mt-auto">
-                <div className="bg-[#09090b]/50 border border-border/30 rounded-lg p-3">
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mb-1">Status</p>
-                  <p className="text-sm font-medium flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Online</p>
-                </div>
-                <div className="bg-[#09090b]/50 border border-border/30 rounded-lg p-3">
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider mb-1">Latency</p>
-                  <p className="text-sm font-medium">~15ms</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Column 2: User Profile Inputs (Like "Payout Threshold") */}
+          {/* Column 1 (Leftmost): User Profile */}
           <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-[550px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <div className="space-y-1">
@@ -295,9 +273,9 @@ function App() {
             </div>
           </Card>
 
-          {/* Column 3: Predictions (Like "Savings Targets" and "Claimable Balance") */}
+          {/* Column 2 (Middle): DoubleML and S-Learner */}
           <div className="flex flex-col gap-6 h-[550px]">
-            
+            {/* DoubleML Card */}
             <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-center relative overflow-hidden group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
@@ -339,95 +317,122 @@ function App() {
               {/* Subtle background accent */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-all group-hover:bg-blue-500/10"></div>
             </Card>
-          </div>
 
-            {/* Second Grid Column: S-Learner and Value Model */}
-            <div className="flex flex-col gap-6">
-              <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
-                      S-LEARNER BASELINE
-                    </h3>
-                    <p className="text-zinc-500 text-xs">Standard Naive ML</p>
-                  </div>
-                  <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
-                    Baseline
-                  </Badge>
-                </div>
-                
-                <div className="mt-6 mb-6">
-                  <span className="text-4xl font-bold text-zinc-100 tracking-tight">
-                    {predictions.s !== null ? `+${(predictions.s * 100).toFixed(2)}%` : '--'}
-                  </span>
-                </div>
-                
+            {/* S-LEARNER Card */}
+            <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300 flex-1 flex flex-col justify-center">
+              <div className="flex justify-between items-start mb-2">
                 <div>
-                  <div className="flex justify-between text-xs font-medium mb-2">
-                    <span className="text-zinc-500 uppercase tracking-wider">Bias Estimation</span>
-                    <span className="text-amber-500 font-semibold tracking-wider">OVERESTIMATED</span>
-                  </div>
-                  <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-amber-500/20 w-full h-full relative">
-                      <div className="absolute top-0 left-0 h-full bg-amber-500 w-[15%]"></div>
-                    </div>
-                  </div>
+                  <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
+                    S-LEARNER BASELINE
+                  </h3>
+                  <p className="text-zinc-500 text-xs">Standard Naive ML</p>
                 </div>
-                
-                <div className="mt-6 pt-5 border-t border-border/30 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 text-amber-500">
-                    <X className="w-3.5 h-3.5" />
-                    <span>Uncontrolled</span>
+                <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
+                  Baseline
+                </Badge>
+              </div>
+              
+              <div className="mt-4 mb-4">
+                <span className="text-4xl font-bold text-zinc-100 tracking-tight">
+                  {predictions.s !== null ? formatPct(predictions.s) : '--'}
+                </span>
+              </div>
+              
+              <div>
+                <div className="flex justify-between text-xs font-medium mb-2">
+                  <span className="text-zinc-500 uppercase tracking-wider">Bias Estimation</span>
+                  <span className="text-amber-500 font-semibold tracking-wider">OVERESTIMATED</span>
+                </div>
+                <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
+                  <div className="bg-amber-500/20 w-full h-full relative">
+                    <div className="absolute top-0 left-0 h-full bg-amber-500 w-[15%]"></div>
                   </div>
-                  <span className="text-zinc-600">Naive Estimate</span>
                 </div>
               </div>
-
-              {/* Value Prediction Card */}
-              <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
-                      LIFETIME VALUE MODEL
-                    </h3>
-                    <p className="text-zinc-500 text-xs">E[Value | Retained]</p>
-                  </div>
-                  <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
-                    LGBM
-                  </Badge>
+              
+              <div className="mt-4 pt-4 border-t border-border/30 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 text-amber-500">
+                  <X className="w-3.5 h-3.5" />
+                  <span>Uncontrolled</span>
                 </div>
-                
-                <div className="mt-6 mb-6">
-                  <span className="text-4xl font-bold text-zinc-100 tracking-tight">
-                    {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
-                  </span>
-                  <span className="text-zinc-500 text-sm ml-2">pts</span>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between text-xs font-medium mb-2">
-                    <span className="text-zinc-500 uppercase tracking-wider">Segment</span>
-                    <span className={`font-semibold tracking-wider ${predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}`}>
-                      {predictions.segment ? predictions.segment.toUpperCase() : '--'}
-                    </span>
-                  </div>
-                  <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
-                    <div className={`h-full ${predictions.is_mismatch ? 'bg-red-500 w-1/2' : 'bg-blue-500 w-full'}`}></div>
-                  </div>
-                </div>
-                
-                <div className="mt-6 pt-5 border-t border-border/30 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 text-emerald-400">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Value-Aware</span>
-                  </div>
-                  <span className="text-zinc-600">Post-Treatment Proxy</span>
-                </div>
+                <span className="text-zinc-600">Naive Estimate</span>
               </div>
             </div>
           </div>
 
-        {/* Bottom Section: Project Details Tabs (Like "Recent Transactions") */}
+          {/* Column 3 (Rightmost): Lifetime Value and Minimized Log */}
+          <div className="flex flex-col gap-6 h-[550px]">
+            {/* Value Prediction Card */}
+            <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300 flex-1 flex flex-col justify-center">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
+                    LIFETIME VALUE MODEL
+                  </h3>
+                  <p className="text-zinc-500 text-xs">E[Value | Retained]</p>
+                </div>
+                <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
+                  LGBM
+                </Badge>
+              </div>
+              
+              <div className="mt-4 mb-4">
+                <span className="text-4xl font-bold text-zinc-100 tracking-tight">
+                  {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
+                </span>
+                <span className="text-zinc-500 text-sm ml-2">pts</span>
+              </div>
+              
+              <div>
+                <div className="flex justify-between text-xs font-medium mb-2">
+                  <span className="text-zinc-500 uppercase tracking-wider">Segment</span>
+                  <span className={`font-semibold tracking-wider ${predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}`}>
+                    {predictions.segment ? predictions.segment.toUpperCase() : '--'}
+                  </span>
+                </div>
+                <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
+                  <div className={`h-full ${predictions.is_mismatch ? 'bg-red-500 w-1/2' : 'bg-blue-500 w-full'}`}></div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-border/30 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Value-Aware</span>
+                </div>
+                <span className="text-zinc-600">Post-Treatment Proxy</span>
+              </div>
+            </div>
+
+            {/* Minimized Live Server Log */}
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
+                <div className="space-y-1">
+                  <CardTitle className="text-[13px] font-semibold">Live Server Log</CardTitle>
+                </div>
+                <Terminal className="w-4 h-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col min-h-0 pb-4">
+                <div ref={logContainerRef} className="flex-1 min-h-0 bg-black/40 rounded-lg p-3 font-mono text-[10px] overflow-y-auto custom-scrollbar border border-border/30">
+                  {logs.map((l, i) => (
+                    <div key={i} className={`mb-1 leading-relaxed
+                      ${l.type === 'system' ? 'text-gray-500' : ''}
+                      ${l.type === 'request' ? 'text-zinc-300' : ''}
+                      ${l.type === 'response' ? 'text-emerald-400' : ''}
+                      ${l.type === 'error' ? 'text-red-400' : ''}
+                    `}>
+                      <span className="opacity-50 select-none mr-1">[{l.time.toISOString().split('T')[1].slice(0,8)}]</span>
+                      {l.msg}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+        </div>
+
+        {/* Bottom Section: Project Details Tabs */}
         <Card className="bg-[#18181b] border-border/40 shadow-none mt-6">
           <CardHeader className="pb-4 border-b border-border/30">
             <CardTitle className="text-base font-semibold">Project Details</CardTitle>
@@ -435,10 +440,11 @@ function App() {
           </CardHeader>
           <CardContent className="p-0">
             <Tabs defaultValue="details" className="w-full">
-              <TabsList className="w-full justify-start bg-transparent border-b border-border/20 rounded-none h-12 p-0 px-4">
-                <TabsTrigger value="details" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full">Methodology</TabsTrigger>
-                <TabsTrigger value="performance" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full">Performance</TabsTrigger>
-                <TabsTrigger value="refutation" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full">Robustness</TabsTrigger>
+              <TabsList className="w-full justify-start bg-transparent border-b border-border/20 rounded-none h-12 p-0 px-4 overflow-x-auto">
+                <TabsTrigger value="details" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Methodology</TabsTrigger>
+                <TabsTrigger value="performance" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Performance</TabsTrigger>
+                <TabsTrigger value="refutation" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Robustness</TabsTrigger>
+                <TabsTrigger value="value-awareness" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Value-Aware Analysis</TabsTrigger>
               </TabsList>
               
               <div className="p-6">
@@ -494,24 +500,22 @@ function App() {
                     </div>
                   </div>
                 </TabsContent>
+                
+                <TabsContent value="value-awareness" className="space-y-6 mt-0 animate-in fade-in duration-300">
+                  <div className="max-w-4xl space-y-4">
+                    <h3 className="text-lg font-semibold text-zinc-100">Value-Aware Segmentation</h3>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed mb-6">
+                      Our model doesn't just predict whether we can save a user (Uplift); it predicts if that user is actually worth saving (Lifetime Value). We cross-reference these two models to identify four key segments. The most critical is the <span className="text-red-400 font-semibold">Mismatch</span> quadrant: users who are highly receptive to treatment, but will churn shortly after anyway, offering purely "phantom value". 
+                    </p>
+                    <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center mt-6 shadow-inner">
+                      <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[500px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                </TabsContent>
               </div>
 
             </Tabs>
           </CardContent>
-          {/* Quadrant Explainer Image */}
-          <div className="mt-8 bg-[#111113] border border-border/40 rounded-xl shadow-xl overflow-hidden">
-            <div className="p-4 border-b border-border/30 bg-[#18181b] flex items-center justify-between">
-              <h3 className="font-semibold text-sm tracking-wide text-zinc-300">Methodology: Value-Aware Segmentation</h3>
-            </div>
-            <div className="p-6">
-              <p className="text-sm text-zinc-400 mb-6 max-w-3xl leading-relaxed">
-                Our model doesn't just predict whether we can save a user (Uplift); it predicts if that user is actually worth saving (Lifetime Value). We cross-reference these two models to identify four key segments. The most critical is the <span className="text-red-400 font-semibold">Mismatch</span> quadrant: users who are highly receptive to treatment, but will churn shortly after anyway, offering purely "phantom value". 
-              </p>
-              <div className="bg-[#18181b] rounded-lg border border-border/30 p-2 flex justify-center">
-                <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[500px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
-              </div>
-            </div>
-          </div>
         </Card>
 
       </div>
