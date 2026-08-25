@@ -120,7 +120,7 @@ def phase3_meta_learners(df, args):
     from src.viz import plot_uplift_curves, plot_cate_distribution
 
     feature_cols = [c for c in df.columns
-                    if c not in ["treatment", "outcome", "tau_true", "propensity"]]
+                    if c not in ["treatment", "outcome", "tau_true", "propensity", "value_score"]]
 
     results = run_all_meta_learners(
         df,
@@ -189,7 +189,7 @@ def phase4_doubleml(df, args):
     import matplotlib.pyplot as plt
 
     feature_cols = [c for c in df.columns
-                    if c not in ["treatment", "outcome", "tau_true", "propensity"]]
+                    if c not in ["treatment", "outcome", "tau_true", "propensity", "value_score"]]
 
     dml_result = run_doubleml(df, feature_cols, n_estimators=200, seed=42)
     tau_dml = dml_result["tau_hat"]
