@@ -284,27 +284,27 @@ function App() {
 
               {/* Hidden Features / Context */}
               <div className="mt-auto pt-4 border-t border-border/20">
-                <label className="text-[13px] font-medium text-zinc-200 mb-2 block">Additional Context</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="bg-[#09090b] border border-border/40 rounded-md py-2 px-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
-                    <span className="text-lg font-bold text-zinc-300 flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 text-amber-500/70" />
-                      {features.avg_rating.toFixed(1)}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-medium text-zinc-200 flex items-center">
                       Avg Rating
                       <InfoTooltip text="The average star rating (1-5) this user has given to movies. High rating indicates a satisfied user." />
-                    </span>
+                    </label>
+                    <div className="flex items-center gap-2 bg-[#09090b] border border-border/40 rounded-md h-9 px-3 text-[13px] font-medium text-zinc-300">
+                      <Star className="w-3.5 h-3.5 text-amber-500/70" />
+                      {features.avg_rating.toFixed(1)}
+                    </div>
                   </div>
-                  <div className="bg-[#09090b] border border-border/40 rounded-md py-2 px-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
-                    <span className="text-lg font-bold text-zinc-300 flex items-center gap-1">
-                      <Tags className="w-3.5 h-3.5 text-emerald-500/70" />
-                      {features.genre_entropy.toFixed(2)}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
+                  
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-medium text-zinc-200 flex items-center">
                       Genre Entropy
                       <InfoTooltip text="A measure of taste diversity. High values mean the user explores many genres; low means they stick to one niche." />
-                    </span>
+                    </label>
+                    <div className="flex items-center gap-2 bg-[#09090b] border border-border/40 rounded-md h-9 px-3 text-[13px] font-medium text-zinc-300">
+                      <Tags className="w-3.5 h-3.5 text-emerald-500/70" />
+                      {features.genre_entropy.toFixed(2)}
+                    </div>
                   </div>
                 </div>
               </div>
