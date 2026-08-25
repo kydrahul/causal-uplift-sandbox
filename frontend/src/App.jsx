@@ -320,7 +320,7 @@ function App() {
           {/* Column 2 (Middle): DoubleML and S-Learner */}
           <div className="flex flex-col gap-6 h-[550px]">
             {/* DoubleML Card */}
-            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
@@ -333,11 +333,13 @@ function App() {
                   <Badge variant="secondary" className="bg-white/10 text-white hover:bg-white/20 text-[10px] font-medium rounded-sm">SOTA</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
-                <div key={predictions.dml} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
-                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
-                    {formatPct(predictions.dml)}
-                  </h2>
+              <CardContent className="pb-6 flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col justify-center">
+                  <div key={predictions.dml} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
+                    <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                      {formatPct(predictions.dml)}
+                    </h2>
+                  </div>
                 </div>
                 
                 {/* Visual indicator of effect magnitude */}
@@ -361,7 +363,7 @@ function App() {
             </Card>
 
             {/* S-LEARNER Card */}
-            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
@@ -374,11 +376,13 @@ function App() {
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">Baseline</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
-                <div key={predictions.s} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
-                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
-                    {formatPct(predictions.s)}
-                  </h2>
+              <CardContent className="pb-6 flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col justify-center">
+                  <div key={predictions.s} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
+                    <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                      {formatPct(predictions.s)}
+                    </h2>
+                  </div>
                 </div>
                 
                 <div className="space-y-1.5 mt-4">
@@ -402,7 +406,7 @@ function App() {
           {/* Column 3 (Rightmost): Lifetime Value and Minimized Log */}
           <div className="flex flex-col gap-6 h-[550px]">
             {/* Value Prediction Card */}
-            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
@@ -415,12 +419,14 @@ function App() {
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">LGBM</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
-                <div key={predictions.value} className="animate-in slide-in-from-bottom-2 fade-in duration-300 flex items-baseline">
-                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
-                    {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
-                  </h2>
-                  <span className="text-zinc-500 text-sm ml-2 font-semibold">pts</span>
+              <CardContent className="pb-6 flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col justify-center">
+                  <div key={predictions.value} className="animate-in slide-in-from-bottom-2 fade-in duration-300 flex items-baseline">
+                    <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                      {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
+                    </h2>
+                    <span className="text-zinc-500 text-sm ml-2 font-semibold">pts</span>
+                  </div>
                 </div>
                 
                 <div className="space-y-1.5 mt-4">
