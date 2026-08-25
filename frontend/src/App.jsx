@@ -483,74 +483,77 @@ function App() {
           <CardContent className="p-0">
             <Tabs defaultValue="details" className="w-full">
               <TabsList className="w-full justify-start bg-transparent border-b border-border/20 rounded-none h-12 p-0 px-4 overflow-x-auto">
-                <TabsTrigger value="details" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Methodology</TabsTrigger>
-                <TabsTrigger value="performance" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Performance</TabsTrigger>
-                <TabsTrigger value="refutation" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Robustness</TabsTrigger>
-                <TabsTrigger value="value-awareness" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Value-Aware Analysis</TabsTrigger>
+                <TabsTrigger value="goal" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">The Goal</TabsTrigger>
+                <TabsTrigger value="how-it-works" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">How It Works</TabsTrigger>
+                <TabsTrigger value="value-awareness" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Business Impact</TabsTrigger>
+                <TabsTrigger value="trust" className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white data-[state=active]:shadow-none rounded-none text-muted-foreground text-[13px] h-full whitespace-nowrap">Trust & Performance</TabsTrigger>
               </TabsList>
               
               <div className="p-6">
-                <TabsContent value="details" className="space-y-6 mt-0 animate-in fade-in duration-300">
+                <TabsContent value="goal" className="space-y-6 mt-0 animate-in fade-in duration-300">
                   <div className="max-w-3xl space-y-4">
-                    <h3 className="text-lg font-semibold text-zinc-100">Causal Machine Learning for Retention</h3>
+                    <h3 className="text-lg font-semibold text-zinc-100">Stop Wasting Notifications</h3>
                     <p className="text-[14px] text-zinc-400 leading-relaxed">
-                      Traditional predictive models predict outcomes (e.g., "Will this user churn?"). Uplift models predict <strong>causality</strong> (e.g., "Will sending a push notification <em>prevent</em> this user from churning?"). We seek to identify the <strong>Persuadables</strong> who only engage because of the intervention.
+                      <strong>What is this?</strong> This is a dashboard that simulates an advanced AI system for retaining users. When you hit "Load Next User", it calculates whether sending a push notification will actually <em>cause</em> that user to come back to the platform.
                     </p>
                     <p className="text-[14px] text-zinc-400 leading-relaxed">
-                      We implemented 5 standard Meta-learners (S, T, X, R-learners) using LightGBM. Because observational data contains confounding bias, we also implemented <strong>Double Machine Learning (DoubleML)</strong> which uses orthogonalization to remove bias before estimating the true Conditional Average Treatment Effect (CATE).
+                      <strong>Why does this matter?</strong> Most companies blast marketing emails or notifications to everyone. This is incredibly wasteful. It annoys users who were going to come back anyway ("Sure Things"), and wastes money on users who will never return regardless ("Lost Causes"). 
+                    </p>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed">
+                      <strong>The Solution:</strong> We use Causal Machine Learning to find the <strong>Persuadables</strong>—the rare, highly-valuable users who will only return <em>because</em> they received your notification. By targeting only them, you maximize retention while minimizing annoyance and cost.
                     </p>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="performance" className="space-y-6 mt-0 animate-in fade-in duration-300">
-                  <div className="flex flex-col md:flex-row gap-8 items-start">
-                    <div className="flex-1 space-y-4 max-w-sm">
-                      <h3 className="text-lg font-semibold text-zinc-100">Model Benchmarks</h3>
-                      <p className="text-[14px] text-zinc-400 leading-relaxed">
-                        DoubleML drastically outperformed standard ML approaches, achieving a PEHE of 0.041 (compared to 0.096 for the S-Learner). It accurately isolates the causal signal from the noise, resulting in a vastly superior AUUC and Qini curve.
-                      </p>
-                    </div>
-                    <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-                      <img src="/results/figures/metrics_bar_auuc.png" alt="AUUC" className="rounded-md border border-border/40 opacity-90 hover:opacity-100 transition-opacity" />
-                      <img src="/results/figures/qini_curves.png" alt="Qini" className="rounded-md border border-border/40 opacity-90 hover:opacity-100 transition-opacity" />
-                    </div>
+                <TabsContent value="how-it-works" className="space-y-6 mt-0 animate-in fade-in duration-300">
+                  <div className="max-w-3xl space-y-4">
+                    <h3 className="text-lg font-semibold text-zinc-100">Correlation vs. Causation</h3>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed">
+                      <strong>The Problem with Standard AI:</strong> Standard AI models (like the "S-Learner Baseline" above) are great at finding correlations, but terrible at finding causation. For example, standard AI might notice that users who buy premium items get more emails. It wrongly assumes "emails cause purchases." It gets confused by bias in the historical data.
+                    </p>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed">
+                      <strong>How we fix it:</strong> We use a state-of-the-art technique called <strong>Double Machine Learning (DoubleML)</strong>. Instead of just looking for patterns, DoubleML mathematically "scrubs" the bias out of the historical data before making a prediction. 
+                    </p>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed">
+                      <strong>The Result:</strong> It outputs the <em>True Causal Uplift (CATE)</em>. This is the exact percentage change in probability that a user will return solely because of the intervention. 
+                    </p>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="refutation" className="space-y-6 mt-0 animate-in fade-in duration-300">
-                  <div className="max-w-3xl space-y-4">
-                    <h3 className="text-lg font-semibold text-zinc-100">Refutation Tests</h3>
-                    <p className="text-[14px] text-zinc-400 leading-relaxed">
-                      Causal models can hallucinate effects. We mathematically verified the DoubleML estimator using refutation tests to ensure stability against unobserved confounders.
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                        <h4 className="text-[13px] font-semibold text-zinc-200">Placebo Treatment</h4>
-                        <p className="text-[12px] text-zinc-500 mt-1">Replaced treatment flag with noise. ATE correctly dropped to 0.000.</p>
-                      </div>
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                        <h4 className="text-[13px] font-semibold text-zinc-200">Common Cause</h4>
-                        <p className="text-[12px] text-zinc-500 mt-1">Added a fake confounder. The estimated effect remained completely stable.</p>
-                      </div>
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                        <h4 className="text-[13px] font-semibold text-zinc-200">Data Subsetting</h4>
-                        <p className="text-[12px] text-zinc-500 mt-1">Refitted on 80% subsamples. Estimate variance was well within bounds.</p>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-                
                 <TabsContent value="value-awareness" className="space-y-6 mt-0 animate-in fade-in duration-300">
                   <div className="max-w-4xl space-y-4">
-                    <h3 className="text-lg font-semibold text-zinc-100">Value-Aware Segmentation</h3>
+                    <h3 className="text-lg font-semibold text-zinc-100">Are they worth saving?</h3>
                     <p className="text-[14px] text-zinc-400 leading-relaxed mb-6">
-                      Our model doesn't just predict whether we can save a user (Uplift); it predicts if that user is actually worth saving (Lifetime Value). We cross-reference these two models to identify four key segments. The most critical is the <span className="text-red-400 font-semibold">Mismatch</span> quadrant: users who are highly receptive to treatment, but will churn shortly after anyway, offering purely "phantom value". 
+                      Predicting if we <em>can</em> save a user is only half the battle. We also need to know if they are <em>worth</em> saving. We run a second AI model (Lifetime Value Model) to predict how much value (watch time, revenue, etc.) a user will generate if they are successfully retained. We cross-reference these two models to segment users into four quadrants.
                     </p>
                     <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center mt-6 shadow-inner">
                       <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[500px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="trust" className="space-y-6 mt-0 animate-in fade-in duration-300">
+                  <div className="max-w-3xl space-y-4">
+                    <h3 className="text-lg font-semibold text-zinc-100">Proving the AI isn't Hallucinating</h3>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed">
+                      Evaluating Causal AI is notoriously difficult because we can never observe alternate realities (e.g., what would have happened if we didn't notify a user we actually notified?). To ensure our DoubleML model isn't just making things up, we subject it to mathematical <strong>Refutation Tests</strong>.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
+                         <h4 className="text-[13px] font-semibold text-zinc-200">Placebo Test</h4>
+                         <p className="text-[12px] text-zinc-500 mt-1">We secretly replaced the real notification data with random noise. The AI correctly realized the notifications had zero effect.</p>
+                      </div>
+                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
+                         <h4 className="text-[13px] font-semibold text-zinc-200">Fake Confounder</h4>
+                         <p className="text-[12px] text-zinc-500 mt-1">We injected fake hidden variables into the dataset to try and confuse the AI. Its conclusions remained perfectly stable.</p>
+                      </div>
+                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
+                         <h4 className="text-[13px] font-semibold text-zinc-200">Performance Check</h4>
+                         <p className="text-[12px] text-zinc-500 mt-1">On validation data, the DoubleML drastically outperformed the standard S-Learner baseline by accurately isolating signal from noise.</p>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
