@@ -5,7 +5,18 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Activity, Clock, Star, Tags, Dices, Terminal, BarChart2, CheckCircle2, FlaskConical, Target, X, Plus } from "lucide-react";
+import { Activity, Clock, Star, Tags, Dices, Terminal, BarChart2, CheckCircle2, FlaskConical, Target, X, Plus, Info } from "lucide-react";
+
+const InfoTooltip = ({ text }) => (
+  <div className="relative group inline-flex items-center ml-1.5 align-middle z-50">
+    <Info className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300 cursor-help transition-colors" />
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2.5 bg-[#111113] border border-border/40 rounded-md text-[11px] leading-relaxed text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl text-center font-normal normal-case tracking-normal z-50">
+      {text}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-border/40"></div>
+      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[2px] border-4 border-transparent border-t-[#111113]"></div>
+    </div>
+  </div>
+);
 
 function App() {
   const [features, setFeatures] = useState({
@@ -216,7 +227,7 @@ function App() {
                 <Dices className="h-4 w-4" />
               </Button>
             </CardHeader>
-            <CardContent className="space-y-6 pt-4 flex-1">
+            <CardContent className="space-y-6 pt-4 flex-1 flex flex-col">
               
               {/* Activity Slider */}
               <div className="space-y-3">
@@ -272,7 +283,7 @@ function App() {
               </div>
 
               {/* Hidden Features / Context */}
-              <div className="mt-4 pt-4 border-t border-border/20">
+              <div className="mt-auto pt-6 border-t border-border/20">
                 <label className="text-[13px] font-medium text-zinc-200 mb-3 block">Additional Context</label>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
@@ -280,14 +291,20 @@ function App() {
                       <Star className="w-4 h-4 text-amber-500/70" />
                       {features.avg_rating.toFixed(1)}
                     </span>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Avg Rating</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
+                      Avg Rating
+                      <InfoTooltip text="The average star rating (1-5) this user has given to movies. High rating indicates a satisfied user." />
+                    </span>
                   </div>
                   <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
                     <span className="text-xl font-bold text-zinc-300 flex items-center gap-1">
                       <Tags className="w-4 h-4 text-emerald-500/70" />
                       {features.genre_entropy.toFixed(2)}
                     </span>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Genre Entropy</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
+                      Genre Entropy
+                      <InfoTooltip text="A measure of taste diversity. High values mean the user explores many genres; low means they stick to one niche." />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -308,7 +325,10 @@ function App() {
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
                     <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">DoubleML Estimate</CardTitle>
-                    <p className="text-[13px] text-zinc-300">True Causal Uplift (CATE)</p>
+                    <p className="text-[13px] text-zinc-300 flex items-center">
+                      True Causal Uplift (CATE)
+                      <InfoTooltip text="The true percentage change in probability that this user will return *because* they received a notification." />
+                    </p>
                   </div>
                   <Badge variant="secondary" className="bg-white/10 text-white hover:bg-white/20 text-[10px] font-medium rounded-sm">SOTA</Badge>
                 </div>
@@ -346,7 +366,10 @@ function App() {
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
                     <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">S-Learner Baseline</CardTitle>
-                    <p className="text-[13px] text-zinc-300">Standard Naive ML</p>
+                    <p className="text-[13px] text-zinc-300 flex items-center">
+                      Standard Naive ML
+                      <InfoTooltip text="A simple predictive model that often overestimates the effect because it doesn't cleanly isolate the causal signal from random noise." />
+                    </p>
                   </div>
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">Baseline</Badge>
                 </div>
@@ -384,7 +407,10 @@ function App() {
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
                     <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Lifetime Value Model</CardTitle>
-                    <p className="text-[13px] text-zinc-300">E[Value | Retained]</p>
+                    <p className="text-[13px] text-zinc-300 flex items-center">
+                      E[Value | Retained]
+                      <InfoTooltip text="The predicted value (e.g., watch time or revenue) this user will generate over their lifetime if they are successfully retained." />
+                    </p>
                   </div>
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">LGBM</Badge>
                 </div>
