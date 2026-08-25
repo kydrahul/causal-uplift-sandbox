@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Activity, Clock, Star, Tags, Dices, Terminal, BarChart2, CheckCircle2, FlaskConical, Target, X, Plus, Info } from "lucide-react";
 
 const InfoTooltip = ({ text }) => (
-  <div className="relative group inline-flex items-center ml-1.5 align-middle z-50">
+  <div className="relative group/tooltip inline-flex items-center ml-1.5 align-middle z-50">
     <Info className="w-3.5 h-3.5 text-zinc-500 hover:text-zinc-300 cursor-help transition-colors" />
-    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2.5 bg-[#111113] border border-border/40 rounded-md text-[11px] leading-relaxed text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl text-center font-normal normal-case tracking-normal z-50">
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2.5 bg-[#111113] border border-border/40 rounded-md text-[11px] leading-relaxed text-zinc-300 opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none shadow-xl text-center font-normal normal-case tracking-normal z-50">
       {text}
       <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-border/40"></div>
       <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[2px] border-4 border-transparent border-t-[#111113]"></div>
@@ -217,7 +217,7 @@ function App() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           
           {/* Column 1 (Leftmost): User Profile */}
-          <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-full">
+          <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-[550px]">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <div className="space-y-1">
                 <CardTitle className="text-base font-semibold">User Profile</CardTitle>
@@ -318,7 +318,7 @@ function App() {
           </Card>
 
           {/* Column 2 (Middle): DoubleML and S-Learner */}
-          <div className="flex flex-col gap-6 h-full">
+          <div className="flex flex-col gap-6 h-[550px]">
             {/* DoubleML Card */}
             <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
               <CardHeader className="pb-2">
@@ -400,7 +400,7 @@ function App() {
           </div>
 
           {/* Column 3 (Rightmost): Lifetime Value and Minimized Log */}
-          <div className="flex flex-col gap-6 h-full">
+          <div className="flex flex-col gap-6 h-[550px]">
             {/* Value Prediction Card */}
             <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
               <CardHeader className="pb-2">
