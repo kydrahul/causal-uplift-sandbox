@@ -21,6 +21,8 @@ function App() {
   const [predictions, setPredictions] = useState({ dml: null, s: null, value: null, segment: null, is_mismatch: false });
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState([{ msg: "System initialized. Waiting for input...", type: "system", time: new Date() }]);
+  const [serverStatus, setServerStatus] = useState("online");
+  const [lastLatency, setLastLatency] = useState(0);
   const logContainerRef = useRef(null);
 
   const fullFeaturesRef = useRef({});
@@ -38,6 +40,7 @@ function App() {
   const fetchRandomUser = async () => {
     setLoading(true);
     addLog("GET /api/random_user - Fetching random profile...", "request");
+    const t0 = performance.now();
     try {
       const res = await fetch('/api/random_user');
       const data = await res.json();
@@ -54,8 +57,12 @@ function App() {
         is_female: data.features.is_female ?? 0
       }));
       
+      const lat = (performance.now() - t0).toFixed(0);
+      setLastLatency(lat);
+      setServerStatus("online");
       addLog(`200 OK - Fetched user index ${data.index}`, "response");
     } catch (e) {
+      setServerStatus("offline");
       addLog(`Error fetching user: ${e.message}`, "error");
     } finally {
       setLoading(false);
@@ -92,6 +99,8 @@ function App() {
       }
       
       const latency = (performance.now() - t0).toFixed(0);
+      setLastLatency(latency);
+      setServerStatus("online");
       
       setPredictions({
         dml: data.doubleml_uplift ?? null,
@@ -103,6 +112,7 @@ function App() {
       
       addLog(`200 OK (${latency}ms) -> DML: ${(data.doubleml_uplift*100).toFixed(2)}%, S: ${(data.s_learner_uplift*100).toFixed(2)}%`, "response");
     } catch (e) {
+      setServerStatus("offline");
       addLog(`Error predicting: ${e.message}`, "error");
     } finally {
       setLoading(false);
@@ -144,16 +154,20 @@ function App() {
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Shifted Latency and Status to Top */}
-            <div className="flex items-center gap-4 bg-[#111113] border border-border/40 px-4 py-2 rounded-md shadow-sm h-10">
+            {/* Dynamic Latency and Status */}
+            <div className="flex items-center gap-4 bg-[#111113] border border-border/40 px-4 py-2 rounded-md shadow-sm h-10 transition-colors duration-300">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">Online</span>
+                <span className={`w-2 h-2 rounded-full ${serverStatus === 'online' ? 'bg-emerald-500' : 'bg-red-500 animate-pulse'}`}></span>
+                <span className={`text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${serverStatus === 'online' ? 'text-zinc-300' : 'text-red-400'}`}>
+                  {serverStatus === 'online' ? 'Online' : 'Offline'}
+                </span>
               </div>
               <div className="w-px h-4 bg-border/40"></div>
               <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">~15ms</span>
+                <Clock className={`w-3.5 h-3.5 ${serverStatus === 'online' ? 'text-muted-foreground' : 'text-red-400/50'}`} />
+                <span className={`text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${serverStatus === 'online' ? 'text-zinc-300' : 'text-red-400'}`}>
+                  {lastLatency > 0 ? `${lastLatency}ms` : '--ms'}
+                </span>
               </div>
             </div>
 
