@@ -271,11 +271,24 @@ function App() {
                 </div>
               </div>
 
-              {/* Textarea mimicking "Notes" */}
-              <div className="space-y-2 mt-4 pt-4 border-t border-border/20">
-                <label className="text-[13px] font-medium text-zinc-200">Metadata Context</label>
-                <div className="bg-[#09090b]/50 border border-border/30 rounded-lg p-3 text-[12px] text-muted-foreground h-20">
-                  User falls into segment {features.age_group}. Past engagement shows an average rating of {features.avg_rating.toFixed(1)}.
+              {/* Hidden Features / Context */}
+              <div className="mt-4 pt-4 border-t border-border/20">
+                <label className="text-[13px] font-medium text-zinc-200 mb-3 block">Additional Context</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
+                    <span className="text-xl font-bold text-zinc-300 flex items-center gap-1">
+                      <Star className="w-4 h-4 text-amber-500/70" />
+                      {features.avg_rating.toFixed(1)}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Avg Rating</span>
+                  </div>
+                  <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
+                    <span className="text-xl font-bold text-zinc-300 flex items-center gap-1">
+                      <Tags className="w-4 h-4 text-emerald-500/70" />
+                      {features.genre_entropy.toFixed(2)}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Genre Entropy</span>
+                  </div>
                 </div>
               </div>
 
