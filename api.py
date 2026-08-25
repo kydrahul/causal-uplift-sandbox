@@ -47,9 +47,10 @@ def load_assets():
         value_model = joblib.load(MODELS_DIR / "value_model.joblib")
         
         # Compute thresholds from historical dataset to align with Quadrant definitions
-        X_hist = df[feature_cols].values
-        historical_uplift = dml_model.effect(X_hist)
-        historical_value = value_model.predict(X_hist)
+        # Sample 500 rows to drastically speed up startup time (prevents 503 timeouts on free hosting)
+        X_hist_sample = df[feature_cols].sample(n=min(500, len(df)), random_state=42).values
+        historical_uplift = dml_model.effect(X_hist_sample)
+        historical_value = value_model.predict(X_hist_sample)
         uplift_threshold = np.median(historical_uplift)
         value_threshold = np.median(historical_value)
         
