@@ -521,38 +521,64 @@ function App() {
                 </TabsContent>
 
                 <TabsContent value="value-awareness" className="space-y-6 mt-0 animate-in fade-in duration-300">
-                  <div className="max-w-4xl space-y-4">
+                  <div className="max-w-5xl space-y-4">
                     <h3 className="text-lg font-semibold text-zinc-100">Are they worth saving?</h3>
                     <p className="text-[14px] text-zinc-400 leading-relaxed mb-6">
-                      Predicting if we <em>can</em> save a user is only half the battle. We also need to know if they are <em>worth</em> saving. We run a second AI model (Lifetime Value Model) to predict how much value (watch time, revenue, etc.) a user will generate if they are successfully retained. We cross-reference these two models to segment users into four quadrants.
+                      Predicting if we <em>can</em> save a user is only half the battle. We also need to know if they are <em>worth</em> saving. We run a second AI model (Lifetime Value Model) to predict how much value (watch time, revenue, etc.) a user will generate if they are successfully retained. By cross-referencing Causal Uplift with Lifetime Value, we segment users into four actionable quadrants:
                     </p>
-                    <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center mt-6 shadow-inner">
-                      <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[500px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                      <div className="space-y-4">
+                        <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                          <h4 className="text-[13px] font-bold text-yellow-500 mb-1">⭐ Star Users (High Uplift, High Value)</h4>
+                          <p className="text-[12px] text-zinc-400">The VIPs. They will leave if ignored, but will stay if notified. Because they spend a lot, this is where you should maximize your marketing budget.</p>
+                        </div>
+                        <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                          <h4 className="text-[13px] font-bold text-blue-400 mb-1">👍 Sure Things (Low Uplift, High Value)</h4>
+                          <p className="text-[12px] text-zinc-400">They love the product and will stay regardless of what we do. Don't waste budget on them, just let them enjoy the app.</p>
+                        </div>
+                        <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                          <h4 className="text-[13px] font-bold text-red-400 mb-1">⚠️ Mismatch (High Uplift, Low Value)</h4>
+                          <p className="text-[12px] text-zinc-400">"Phantom Value". They react positively to notifications, but their lifetime value is near zero. Wasting notifications on them creates fake engagement metrics.</p>
+                        </div>
+                        <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
+                          <h4 className="text-[13px] font-bold text-zinc-500 mb-1">❌ Lost Causes (Low Uplift, Low Value)</h4>
+                          <p className="text-[12px] text-zinc-400">They don't engage and they don't spend. Ignore them completely.</p>
+                        </div>
+                      </div>
+                      <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner h-full items-center">
+                        <img src="/value_quadrant.png" alt="Value vs Uplift Quadrant Analysis" className="max-h-[400px] object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="trust" className="space-y-6 mt-0 animate-in fade-in duration-300">
-                  <div className="max-w-3xl space-y-4">
-                    <h3 className="text-lg font-semibold text-zinc-100">Proving the AI isn't Hallucinating</h3>
-                    <p className="text-[14px] text-zinc-400 leading-relaxed">
-                      Evaluating Causal AI is notoriously difficult because we can never observe alternate realities (e.g., what would have happened if we didn't notify a user we actually notified?). To ensure our DoubleML model isn't just making things up, we subject it to mathematical <strong>Refutation Tests</strong>.
+                  <div className="max-w-5xl space-y-4">
+                    <h3 className="text-lg font-semibold text-zinc-100">Concrete Model Performance</h3>
+                    <p className="text-[14px] text-zinc-400 leading-relaxed mb-6">
+                      Instead of theoretical tests, we evaluate Uplift models using standard business metrics: the <strong>Qini Curve</strong> and <strong>AUUC (Area Under Uplift Curve)</strong>. These metrics prove how much actual business value the model captures compared to targeting users randomly.
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                         <h4 className="text-[13px] font-semibold text-zinc-200">Placebo Test</h4>
-                         <p className="text-[12px] text-zinc-500 mt-1">We secretly replaced the real notification data with random noise. The AI correctly realized the notifications had zero effect.</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                      <div className="space-y-3">
+                        <h4 className="text-[14px] font-semibold text-zinc-200">Qini Curve (Cumulative Uplift)</h4>
+                        <p className="text-[13px] text-zinc-400">
+                          The Qini curve shows how many "incremental" retentions we gain as we target more users. A steeper curve means the model successfully identifies the best targets first. Our DoubleML model captures significantly more uplift earlier than the baseline S-Learner.
+                        </p>
+                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-2">
+                          <img src="/results/figures/qini_curves.png" alt="Qini Curve" className="w-full h-auto object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                        </div>
                       </div>
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                         <h4 className="text-[13px] font-semibold text-zinc-200">Fake Confounder</h4>
-                         <p className="text-[12px] text-zinc-500 mt-1">We injected fake hidden variables into the dataset to try and confuse the AI. Its conclusions remained perfectly stable.</p>
-                      </div>
-                      <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                         <CheckCircle2 className="w-5 h-5 text-emerald-500 mb-2" />
-                         <h4 className="text-[13px] font-semibold text-zinc-200">Performance Check</h4>
-                         <p className="text-[12px] text-zinc-500 mt-1">On validation data, the DoubleML drastically outperformed the standard S-Learner baseline by accurately isolating signal from noise.</p>
+
+                      <div className="space-y-3">
+                        <h4 className="text-[14px] font-semibold text-zinc-200">Area Under Uplift Curve (AUUC)</h4>
+                        <p className="text-[13px] text-zinc-400">
+                          AUUC provides a concrete, numerical score for the models. Higher is better. The DoubleML model achieves a significantly higher AUUC than both random targeting and naive baseline models, proving its superiority in isolating the true causal signal.
+                        </p>
+                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-2">
+                          <img src="/results/figures/metrics_bar_auuc.png" alt="AUUC Metrics" className="w-full h-auto object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
+                        </div>
                       </div>
                     </div>
                   </div>
