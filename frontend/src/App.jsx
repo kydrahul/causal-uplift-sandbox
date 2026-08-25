@@ -530,19 +530,19 @@ function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                       <div className="space-y-4">
                         <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                          <h4 className="text-[13px] font-bold text-yellow-500 mb-1">⭐ Star Users (High Uplift, High Value)</h4>
+                          <h4 className="text-[13px] font-bold text-yellow-500 mb-1">Star Users (High Uplift, High Value)</h4>
                           <p className="text-[12px] text-zinc-400">The VIPs. They will leave if ignored, but will stay if notified. Because they spend a lot, this is where you should maximize your marketing budget.</p>
                         </div>
                         <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                          <h4 className="text-[13px] font-bold text-blue-400 mb-1">👍 Sure Things (Low Uplift, High Value)</h4>
+                          <h4 className="text-[13px] font-bold text-blue-400 mb-1">Sure Things (Low Uplift, High Value)</h4>
                           <p className="text-[12px] text-zinc-400">They love the product and will stay regardless of what we do. Don't waste budget on them, just let them enjoy the app.</p>
                         </div>
                         <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                          <h4 className="text-[13px] font-bold text-red-400 mb-1">⚠️ Mismatch (High Uplift, Low Value)</h4>
+                          <h4 className="text-[13px] font-bold text-red-400 mb-1">Mismatch (High Uplift, Low Value)</h4>
                           <p className="text-[12px] text-zinc-400">"Phantom Value". They react positively to notifications, but their lifetime value is near zero. Wasting notifications on them creates fake engagement metrics.</p>
                         </div>
                         <div className="bg-[#09090b]/50 p-4 rounded-md border border-border/30">
-                          <h4 className="text-[13px] font-bold text-zinc-500 mb-1">❌ Lost Causes (Low Uplift, Low Value)</h4>
+                          <h4 className="text-[13px] font-bold text-zinc-500 mb-1">Lost Causes (Low Uplift, Low Value)</h4>
                           <p className="text-[12px] text-zinc-400">They don't engage and they don't spend. Ignore them completely.</p>
                         </div>
                       </div>
@@ -560,23 +560,23 @@ function App() {
                       Instead of theoretical tests, we evaluate Uplift models using standard business metrics: the <strong>Qini Curve</strong> and <strong>AUUC (Area Under Uplift Curve)</strong>. These metrics prove how much actual business value the model captures compared to targeting users randomly.
                     </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                      <div className="space-y-3">
-                        <h4 className="text-[14px] font-semibold text-zinc-200">Qini Curve (Cumulative Uplift)</h4>
-                        <p className="text-[13px] text-zinc-400">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 items-stretch">
+                      <div className="flex flex-col h-full">
+                        <h4 className="text-[14px] font-semibold text-zinc-200 mb-2">Qini Curve (Cumulative Uplift)</h4>
+                        <p className="text-[13px] text-zinc-400 mb-4">
                           The Qini curve shows how many "incremental" retentions we gain as we target more users. A steeper curve means the model successfully identifies the best targets first. Our DoubleML model captures significantly more uplift earlier than the baseline S-Learner.
                         </p>
-                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-2">
+                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-auto">
                           <img src="/results/figures/qini_curves.png" alt="Qini Curve" className="w-full h-auto object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
                         </div>
                       </div>
 
-                      <div className="space-y-3">
-                        <h4 className="text-[14px] font-semibold text-zinc-200">Area Under Uplift Curve (AUUC)</h4>
-                        <p className="text-[13px] text-zinc-400">
+                      <div className="flex flex-col h-full">
+                        <h4 className="text-[14px] font-semibold text-zinc-200 mb-2">Area Under Uplift Curve (AUUC)</h4>
+                        <p className="text-[13px] text-zinc-400 mb-4">
                           AUUC provides a concrete, numerical score for the models. Higher is better. The DoubleML model achieves a significantly higher AUUC than both random targeting and naive baseline models, proving its superiority in isolating the true causal signal.
                         </p>
-                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-2">
+                        <div className="bg-[#111113] border border-border/30 rounded-xl p-2 flex justify-center shadow-inner mt-auto">
                           <img src="/results/figures/metrics_bar_auuc.png" alt="AUUC Metrics" className="w-full h-auto object-contain rounded-md opacity-90 hover:opacity-100 transition-opacity" />
                         </div>
                       </div>
