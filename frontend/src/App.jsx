@@ -203,10 +203,10 @@ function App() {
         )}
 
         {/* 3-Column Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           
           {/* Column 1 (Leftmost): User Profile */}
-          <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-[550px]">
+          <Card className="bg-[#18181b] border-border/40 shadow-none flex flex-col h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <div className="space-y-1">
                 <CardTitle className="text-base font-semibold">User Profile</CardTitle>
@@ -216,7 +216,7 @@ function App() {
                 <Dices className="h-4 w-4" />
               </Button>
             </CardHeader>
-            <CardContent className="space-y-6 pt-4 flex-1 overflow-y-auto custom-scrollbar">
+            <CardContent className="space-y-6 pt-4 flex-1">
               
               {/* Activity Slider */}
               <div className="space-y-3">
@@ -288,9 +288,9 @@ function App() {
           </Card>
 
           {/* Column 2 (Middle): DoubleML and S-Learner */}
-          <div className="flex flex-col gap-6 h-[550px]">
+          <div className="flex flex-col gap-6 h-full">
             {/* DoubleML Card */}
-            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-center relative overflow-hidden group">
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
@@ -300,7 +300,7 @@ function App() {
                   <Badge variant="secondary" className="bg-white/10 text-white hover:bg-white/20 text-[10px] font-medium rounded-sm">SOTA</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex flex-col gap-4">
+              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
                 <div key={predictions.dml} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
                   <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
                     {formatPct(predictions.dml)}
@@ -322,101 +322,84 @@ function App() {
                     ></div>
                   </div>
                 </div>
-                
-                <div className="mt-2 pt-4 border-t border-border/20 flex justify-between items-center text-[12px] text-muted-foreground">
-                  <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-500"/> 4/4 Passed</span>
-                  <span className="text-zinc-300">Conf: High</span>
-                </div>
               </CardContent>
               {/* Subtle background accent */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none transition-all group-hover:bg-blue-500/10"></div>
             </Card>
 
             {/* S-LEARNER Card */}
-            <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300 flex-1 flex flex-col justify-center">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
-                    S-LEARNER BASELINE
-                  </h3>
-                  <p className="text-zinc-500 text-xs">Standard Naive ML</p>
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-center">
+                  <div className="space-y-1">
+                    <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">S-Learner Baseline</CardTitle>
+                    <p className="text-[13px] text-zinc-300">Standard Naive ML</p>
+                  </div>
+                  <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">Baseline</Badge>
                 </div>
-                <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
-                  Baseline
-                </Badge>
-              </div>
-              
-              <div className="mt-4 mb-4">
-                <span className="text-4xl font-bold text-zinc-100 tracking-tight">
-                  {predictions.s !== null ? formatPct(predictions.s) : '--'}
-                </span>
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-xs font-medium mb-2">
-                  <span className="text-zinc-500 uppercase tracking-wider">Bias Estimation</span>
-                  <span className="text-amber-500 font-semibold tracking-wider">OVERESTIMATED</span>
+              </CardHeader>
+              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
+                <div key={predictions.s} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
+                  <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                    {formatPct(predictions.s)}
+                  </h2>
                 </div>
-                <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-amber-500/20 w-full h-full relative">
-                    <div className="absolute top-0 left-0 h-full bg-amber-500 w-[15%]"></div>
+                
+                <div className="space-y-1.5 mt-2">
+                  <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
+                    <span>Variance vs DoubleML</span>
+                    <span className="text-amber-500">
+                      {predictions.s !== null && predictions.dml !== null ? Math.abs((predictions.s - predictions.dml)*100).toFixed(1) + "%" : "--%"}
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-zinc-800/50 rounded-full overflow-hidden border border-zinc-800">
+                    <div 
+                      className="h-full bg-amber-500 transition-all duration-700 ease-out"
+                      style={{ width: predictions.s !== null && predictions.dml !== null ? `${Math.min(100, Math.abs(predictions.s - predictions.dml) * 500)}%` : '0%' }}
+                    ></div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="mt-4 pt-4 border-t border-border/30 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 text-amber-500">
-                  <X className="w-3.5 h-3.5" />
-                  <span>Uncontrolled</span>
-                </div>
-                <span className="text-zinc-600">Naive Estimate</span>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Column 3 (Rightmost): Lifetime Value and Minimized Log */}
-          <div className="flex flex-col gap-6 h-[550px]">
+          <div className="flex flex-col gap-6 h-full">
             {/* Value Prediction Card */}
-            <div className="bg-[#111113] border border-border/40 rounded-xl p-6 shadow-xl relative overflow-hidden transition-all duration-300 flex-1 flex flex-col justify-center">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h3 className="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
-                    LIFETIME VALUE MODEL
-                  </h3>
-                  <p className="text-zinc-500 text-xs">E[Value | Retained]</p>
+            <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col justify-between relative overflow-hidden group">
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-center">
+                  <div className="space-y-1">
+                    <CardTitle className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Lifetime Value Model</CardTitle>
+                    <p className="text-[13px] text-zinc-300">E[Value | Retained]</p>
+                  </div>
+                  <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">LGBM</Badge>
                 </div>
-                <Badge variant="outline" className="bg-[#18181b] text-zinc-400 border-zinc-800">
-                  LGBM
-                </Badge>
-              </div>
-              
-              <div className="mt-4 mb-4">
-                <span className="text-4xl font-bold text-zinc-100 tracking-tight">
-                  {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
-                </span>
-                <span className="text-zinc-500 text-sm ml-2">pts</span>
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-xs font-medium mb-2">
-                  <span className="text-zinc-500 uppercase tracking-wider">Segment</span>
-                  <span className={`font-semibold tracking-wider ${predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}`}>
-                    {predictions.segment ? predictions.segment.toUpperCase() : '--'}
-                  </span>
+              </CardHeader>
+              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
+                <div key={predictions.value} className="animate-in slide-in-from-bottom-2 fade-in duration-300 flex items-baseline">
+                  <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                    {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
+                  </h2>
+                  <span className="text-zinc-500 text-sm ml-2 font-semibold">pts</span>
                 </div>
-                <div className="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
-                  <div className={`h-full ${predictions.is_mismatch ? 'bg-red-500 w-1/2' : 'bg-blue-500 w-full'}`}></div>
+                
+                <div className="space-y-1.5 mt-2">
+                  <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
+                    <span>Target Segment</span>
+                    <span className={predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}>
+                      {predictions.segment ? predictions.segment : '--'}
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-zinc-800/50 rounded-full overflow-hidden border border-zinc-800">
+                    <div 
+                      className={`h-full transition-all duration-700 ease-out ${predictions.is_mismatch ? 'bg-red-500' : 'bg-blue-500'}`} 
+                      style={{ width: predictions.segment ? (predictions.is_mismatch ? '30%' : '100%') : '0%' }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="mt-4 pt-4 border-t border-border/30 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 text-emerald-400">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Value-Aware</span>
-                </div>
-                <span className="text-zinc-600">Post-Treatment Proxy</span>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Minimized Live Server Log */}
             <Card className="bg-[#18181b] border-border/40 shadow-none flex-1 flex flex-col overflow-hidden">
