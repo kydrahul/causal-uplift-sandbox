@@ -227,7 +227,7 @@ function App() {
                 <Dices className="h-4 w-4" />
               </Button>
             </CardHeader>
-            <CardContent className="space-y-6 pt-4 flex-1 flex flex-col">
+            <CardContent className="space-y-5 pt-4 flex-1 flex flex-col">
               
               {/* Activity Slider */}
               <div className="space-y-3">
@@ -283,12 +283,12 @@ function App() {
               </div>
 
               {/* Hidden Features / Context */}
-              <div className="mt-auto pt-6 border-t border-border/20">
-                <label className="text-[13px] font-medium text-zinc-200 mb-3 block">Additional Context</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
-                    <span className="text-xl font-bold text-zinc-300 flex items-center gap-1">
-                      <Star className="w-4 h-4 text-amber-500/70" />
+              <div className="mt-auto pt-4 border-t border-border/20">
+                <label className="text-[13px] font-medium text-zinc-200 mb-2 block">Additional Context</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-[#09090b] border border-border/40 rounded-md py-2 px-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
+                    <span className="text-lg font-bold text-zinc-300 flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 text-amber-500/70" />
                       {features.avg_rating.toFixed(1)}
                     </span>
                     <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
@@ -296,9 +296,9 @@ function App() {
                       <InfoTooltip text="The average star rating (1-5) this user has given to movies. High rating indicates a satisfied user." />
                     </span>
                   </div>
-                  <div className="bg-[#09090b] border border-border/40 rounded-md p-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
-                    <span className="text-xl font-bold text-zinc-300 flex items-center gap-1">
-                      <Tags className="w-4 h-4 text-emerald-500/70" />
+                  <div className="bg-[#09090b] border border-border/40 rounded-md py-2 px-3 flex flex-col justify-center items-center transition-all hover:bg-[#111113]">
+                    <span className="text-lg font-bold text-zinc-300 flex items-center gap-1">
+                      <Tags className="w-3.5 h-3.5 text-emerald-500/70" />
                       {features.genre_entropy.toFixed(2)}
                     </span>
                     <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1 flex items-center">
@@ -333,15 +333,15 @@ function App() {
                   <Badge variant="secondary" className="bg-white/10 text-white hover:bg-white/20 text-[10px] font-medium rounded-sm">SOTA</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
+              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
                 <div key={predictions.dml} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
-                  <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
                     {formatPct(predictions.dml)}
                   </h2>
                 </div>
                 
                 {/* Visual indicator of effect magnitude */}
-                <div className="space-y-1.5 mt-2">
+                <div className="space-y-1.5 mt-4">
                   <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
                     <span>Effect Magnitude</span>
                     <span className={predictions.dml > 0 ? "text-emerald-400" : "text-red-400"}>
@@ -374,14 +374,14 @@ function App() {
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">Baseline</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
+              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
                 <div key={predictions.s} className="animate-in slide-in-from-bottom-2 fade-in duration-300">
-                  <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
                     {formatPct(predictions.s)}
                   </h2>
                 </div>
                 
-                <div className="space-y-1.5 mt-2">
+                <div className="space-y-1.5 mt-4">
                   <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
                     <span>Variance vs DoubleML</span>
                     <span className="text-amber-500">
@@ -415,15 +415,15 @@ function App() {
                   <Badge variant="outline" className="bg-[#09090b] text-zinc-400 border-zinc-800 text-[10px]">LGBM</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pb-4 flex-1 flex flex-col justify-end gap-4">
+              <CardContent className="pb-4 flex-1 flex flex-col justify-between">
                 <div key={predictions.value} className="animate-in slide-in-from-bottom-2 fade-in duration-300 flex items-baseline">
-                  <h2 className={`text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
+                  <h2 className={`text-4xl lg:text-5xl font-bold tracking-tighter ${loading ? 'opacity-50' : 'opacity-100'} transition-opacity`}>
                     {predictions.value !== null ? `${predictions.value.toFixed(1)}` : '--'}
                   </h2>
                   <span className="text-zinc-500 text-sm ml-2 font-semibold">pts</span>
                 </div>
                 
-                <div className="space-y-1.5 mt-2">
+                <div className="space-y-1.5 mt-4">
                   <div className="flex justify-between text-[11px] text-zinc-400 font-medium uppercase tracking-wider">
                     <span>Target Segment</span>
                     <span className={predictions.is_mismatch ? 'text-red-400' : 'text-blue-400'}>
